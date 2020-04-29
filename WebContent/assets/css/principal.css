@@ -1,0 +1,39 @@
+#btnEnviar {
+	margin-top: 40px;
+}
+
+#btnBuscar {
+	margin-top: 40px;
+}
+
+select#inativo {
+	margin-bottom: 0;
+}
+
+#observacao {
+	margin: 0;
+}
+
+#rowModulos {
+	margin-bottom: 0;
+}
+
+#usuario {
+	color: #999;
+}
+
+#tipo {
+	margin-top: 20px;
+}
+
+h4 {
+	font-family: Helvetica Neue;
+}
+
+.remove-teste{
+	display: none;
+}
+
+.dadosAlteracao {
+	text-align: center;
+}
