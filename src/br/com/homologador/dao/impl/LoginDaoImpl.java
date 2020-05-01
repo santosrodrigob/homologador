@@ -28,11 +28,12 @@ public class LoginDaoImpl implements LoginDao {
 		
 		StringBuilder query = new StringBuilder();
 		query.append("select ");
-		query.append("	codigo_usuario, ");
-		query.append("	senha, ");
-		query.append("	usuario ");
+		query.append("	u.codigo_usuario, ");
+		query.append("	u.senha, ");
+		query.append("	u.usuario ");
 		query.append("from ");
-		query.append("	tb_usuario ");
+		query.append("	tb_usuario u ");
+		query.append("	inner join tb_role r on u.codigo_acesso_homologador=r.codigo_acesso ");
 		query.append("where ");
 		query.append("	codigo_usuario = ? ");
 		query.append("	and senha = ? ");

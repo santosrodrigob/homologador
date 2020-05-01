@@ -50,7 +50,7 @@ public class ControllerServlet extends HttpServlet {
 		String controllerParameter = request.getParameter("controller");
 
 		String nome = null;
-		String nomeDaClasse = "br.com.rodrigo.controller." + controllerParameter + "Controller";
+		String nomeDaClasse = "br.com.homologador.controller." + controllerParameter + "Controller";
 		
 		try 
 		{
