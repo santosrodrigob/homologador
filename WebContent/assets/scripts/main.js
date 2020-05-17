@@ -81,9 +81,9 @@
 			$('select#tipo').formSelect();
 
     	}).fail(function() {
-    		console.log("Falhou");
+    		console.log("Ajax falhou");
     	}).always(function() {
-    		console.log("Finish");
+    		console.log("Ajax finalizou");
     	});
 	}
 
@@ -130,7 +130,6 @@
 	function clearMessage() {
 
 		setTimeout(function() {
-			console.log("entrei timeout");
 			$('#message').text('');
 		}, 6000);
 	}

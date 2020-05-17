@@ -22,11 +22,11 @@
 			<form action="${linkServletLeiaMe }" method="POST" id="formLeiaMe">
 			<section>
 				<div class="row">
-					<div class="col m4">
-						<h6>Código:</h6> 
-						<input type="number" name="codigoLeiaMe" id="codigoLeiaMe" disabled/> 
+					<div class="col m1">
+						<h6>Id:</h6>
+						<input type="number" name="codigoLeiaMe" id="codigoLeiaMe" disabled/>
 					</div>
-					<div class="col m4">
+					<div class="col m3">
 						<h6>Módulos:</h6>
 						<select name="modulo" id="modulo">
 							<option value="0">Selecione...</option>
@@ -35,7 +35,20 @@
 							</c:forEach>
 						</select>
 					</div>
-					<div class="col m4">
+					<div class="col m3" id="divfeature">
+						<h6>Features:</h6>
+						<select name="feature" id="feature">
+							<option value="0">Selecione...</option>
+							<c:forEach items="${features }" var="feature">
+								<option value="${feature.codigoFeature }" ${feature.codigoFeature == filtro.codigoFeature ? 'selected' : 'disabled' }>${feature.descricaoFeature }</option>
+							</c:forEach>
+						</select>
+					</div>
+					<div class="col m3">
+						<h6>Solicitante: </h6>
+						<input type="text" min="0" max="50" name="solicitante" id="solicitante" value="${filtro.solicitante }" />
+					</div>
+					<div class="col m2">
 						<h6>Versão:</h6>
 						<input type="text" min="0" max="12" name="versao" id="versao" value="${filtro.versao }"/>
 					</div>
@@ -50,10 +63,10 @@
 						    <i class="material-icons right">send</i>
 						</button>
 					</div>
-				</div>
-				<div>
-					<input name ="acao" type="hidden" value="Adicionar" />
-					<input name ="controller" type="hidden" value="LeiaMe" />
+					<div>
+						<input type="hidden" name="acao" value="Adicionar">
+						<input type="hidden" name="controller" value="LeiaMe">
+					</div>
 				</div>
 			</section>
 			</form>

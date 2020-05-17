@@ -34,7 +34,7 @@
 						<h6>Feature</h6>
 						<select name="feature" id="feature" disabled="disabled">
 							<c:forEach items="${features }" var="feature">
-								<option value="${feature.codigoFeature }" ${feature.codigoFeature == casoTeste.codigoFeature ? 'selected' : '' }>${feature.descricaoFeature }</option>
+								<option value="${feature.codigoFeature }" ${feature.codigoFeature == casoTeste.codigoFeature ? 'selected' : 'disabled' }>${feature.descricaoFeature }</option>
 							</c:forEach>
 						</select>
 					</div>
@@ -42,7 +42,7 @@
 						<h6>Tipo</h6>
 						<select name="tipo" id="tipo" disabled="disabled">
 							<c:forEach items="${tipos }" var="tipo">
-								<option value="${tipo.codigoTipo }" ${tipo.codigoTipo == casoTeste.codigoTipo ? 'selected' : '' }>${tipo.descricaoTipo }</option>
+								<option value="${tipo.codigoTipo }" ${tipo.codigoTipo == casoTeste.codigoTipo ? 'selected' : 'disabled' }>${tipo.descricaoTipo }</option>
 							</c:forEach>
 						</select>
 					</div>

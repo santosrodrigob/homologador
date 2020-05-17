@@ -4,6 +4,12 @@
 		<c:import url="../menu/menu.jsp"></c:import>
 	</head>
 	<body>
+
+		<div class="col m12 center">
+			<div id="relatorio" class="table-responsive">
+			</div>
+		</div>
+
 		<div>
 			<div class="stratButtons">
 				<a class="btn-floating btn-large waves-effect waves-light red" id="btn-open" href="entrada?controller=LeiaMe&acao=Open">
@@ -24,6 +30,7 @@
 			<div class="col m4 right">
 				<input id="pesquisa" name="pesquisa" placeholder="Pesquisar"/>
 			</div>
+
 			<table class="striped centered">
 				<thead>
 					<tr>
@@ -31,10 +38,11 @@
 						<th>Versão</th>
 						<th>Descrição</th>
 						<th>Módulo</th>
+						<th>Solicitante</th>
 						<th colspan="2">Ações</th>
 					</tr>
 				</thead>
-				<tbody>
+				<tbody>				
 				<c:forEach items="${leiames }" var="leiame">
 					<tr class="testes">
 						<td class="codigo">
@@ -52,7 +60,10 @@
 							${leiame.descricaoLeiaMe }
 						</td>
 						<td class="testeFeature">
-							${leiame.descricaoModulo }
+							${leiame.descricaoModulo } / ${leiame.descricaoFeature }
+						</td>
+						<td class="inativo">
+							${leiame.solicitante }
 						</td>
 						<td class="inativo">
 							<c:if test="${leiame.inativo == 0 }">
@@ -75,8 +86,6 @@
 				</c:forEach>
 				</tbody>
 			</table>
-				
-		<input type="hidden" name="controller" value="LeiaMe">
 	</body>
 	<c:import url="../menu/imports-js.jsp"></c:import>
 </html>

@@ -46,6 +46,7 @@ public final class ConstantDataManager
 	public static final String PARAMETER_TIPO_BUG = "tipo";
 	public static final String PARAMETER_FILTRAR = "filtrar";
 	public static final String PARAMETER_RELATORIO = "relatorio";
+	public static final String PARAMETER_SOLICITANTE = "solicitante";
 
 	public static final String PARAMETER_COMBO_CODIGO_MODULO = "modulo";
 	public static final String PARAMETER_COMBO_CODIGO_FEATURE = "feature";

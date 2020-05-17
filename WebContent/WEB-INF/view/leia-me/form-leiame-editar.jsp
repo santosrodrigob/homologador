@@ -14,19 +14,20 @@
 					<i class="material-icons">add</i>
 				</a>
 			</div>
+			
 			<h4 class="center">Alteração de Leia-Me</h4>
 		</div>
 
 		<div class="divider"></div>
 		<div class="container">
-			<form action="${linkServletLeiaMe }" method="POST">
+			<form action="${linkServletLeiaMe }" method="POST" id="formLeiaMe">
 			<section>
 				<div class="row" id="rowModulos">
-					<div class="col m6">
+					<div class="col m1">
 						<h6>Código: </h6>
 						<input id="codigoLeiaMe" name="codigoLeiaMe" type="number" min="1" value="${leiaMe.codigoLeiaMe }" readonly="readonly"/>
 					</div>
-					<div class="col m6">
+					<div class="col m5">
 						<h6>Modulo</h6>
 						<select name="modulo" id="modulo">
 							<c:forEach items="${modulos }" var="modulo">
@@ -34,13 +35,25 @@
 							</c:forEach>
 						</select>
 					</div>
+					<div class="col m5">
+						<h6>Feature</h6>
+						<select name="feature" id="feature">
+							<c:forEach items="${features }" var="feature">
+								<option value="${feature.codigoFeature }" ${feature.codigoFeature == leiaMe.codigoFeature ? 'selected' : 'disabled' }>${feature.descricaoFeature }</option>
+							</c:forEach>
+						</select>
+					</div>
 				</div>
 				<div class="row" id="rowModulos">
-					<div class="col m6">
+					<div class="col m4">
+						<h6>Solicitante: </h6>
+						<input id="solicitante" name="solicitante" type="text" min="1" max="50" value="${leiaMe.solicitante } "/>
+					</div>
+					<div class="col m4">
 						<h6>Versão: </h6>
 						<input id="versao" name="versao" type="text" min="1" max="15" value="${leiaMe.versao } "/>
 					</div>
-					<div class="col m6">
+					<div class="col m4">
 						<h6>Inativo</h6>
 						<select name="inativo" id="inativo">
 							<option value="0" ${leiaMe.inativo == 0 ? 'selected' : '' }>ATIVO</option>
@@ -53,7 +66,7 @@
 						<h6>Descrição: </h6>
 						<textarea name="descricaoLeiaMe" id="descricaoLeiaMe" class="materialize-textarea">${leiaMe.descricaoLeiaMe }</textarea>
 
-						<input name="modulo" type="hidden" min="1" value="${leiaMe.codigoModulo }" readonly="readonly"/>
+						<input name="modulo" type="hidden" value="${leiaMe.codigoLeiaMe }" readonly="readonly"/>
 					</div>
 					<div class="col m2" id="divButtonSend">
 						<button class="btn waves-effect waves-light black"  id="btnEnviar" type="submit" name="action">Enviar

@@ -21,11 +21,14 @@ import javax.servlet.http.HttpServletResponse;
 
 import br.com.homologador.action.Acao;
 import br.com.homologador.model.DadosCriacao;
+import br.com.homologador.model.Feature;
 import br.com.homologador.model.LeiaMe;
 import br.com.homologador.model.Modulo;
 import br.com.homologador.model.vo.Filtro;
+import br.com.homologador.services.FeatureServices;
 import br.com.homologador.services.LeiaMeServices;
 import br.com.homologador.services.ModuloServices;
+import br.com.homologador.services.impl.FeatureServicesImpl;
 import br.com.homologador.services.impl.LeiaMeServicesImpl;
 import br.com.homologador.services.impl.ModuloServicesImpl;
 import br.com.homologador.utils.ConstantDataManager;
@@ -71,6 +74,7 @@ public class LeiaMeController implements Acao {
 		List<LeiaMe> leiames = leiaMe.getLeiames();
 		
 		leiames = leiames.stream()
+				.sorted((l1, l2) -> l1.getDescricaoFeature().compareTo(l2.getDescricaoFeature()))
 				.sorted((l1, l2) -> l2.getVersao().compareTo(l1.getVersao()))
 				.sorted((l1, l2) -> l1.getDescricaoModulo().compareTo(l2.getDescricaoModulo()))
 				.collect(Collectors.toList());
@@ -117,7 +121,7 @@ public class LeiaMeController implements Acao {
 			String titulo1 = "DATA";
 			String titulo2 = "VERSÃO";
 			String titulo3 = "DESCRIÇÃO";
-			String titulos = String.format("%-11s %-15s %s", titulo1, titulo2, titulo3);
+			String titulos = String.format("%-11s %-12s %s", titulo1, titulo2, titulo3);
 
 			PrintStream ps = null;
 			try 
@@ -131,7 +135,8 @@ public class LeiaMeController implements Acao {
 				{
 					if(leia.getDescricaoModulo().equalsIgnoreCase(model))
 					{
-						String valores = String.format("%-11s %-15s %s", leia.getDataCriacaoFormatada(), leia.getVersao(), leia.getDescricaoLeiaMe());
+						String valores = String.format("%-11s %-12s %s", leia.getDataCriacaoFormatada(), leia.getVersao(), 
+								leia.getDescricaoLeiaMe()+" - Solicitante: "+leia.getSolicitante() );
 						ps.println(valores);
 						ps.println();
 					}
@@ -158,7 +163,9 @@ public class LeiaMeController implements Acao {
 		String codigoleiaParameter = request.getParameter(ConstantDataManager.PARAMETER_CODIGO_LEIA_ME);
 		String descricaoParameter = request.getParameter(ConstantDataManager.PARAMETER_DESCRICAO_LEIA_ME);
 		String versaoParameter = request.getParameter(ConstantDataManager.PARAMETER_VERSAO);
+		String solicitanteParameter = request.getParameter(ConstantDataManager.PARAMETER_SOLICITANTE);
 		String moduloParameter = request.getParameter(ConstantDataManager.PARAMETER_COMBO_CODIGO_MODULO);		
+		String featureParameter = request.getParameter(ConstantDataManager.PARAMETER_COMBO_CODIGO_FEATURE);		
 		String inativoParameter = request.getParameter(ConstantDataManager.PARAMETER_INATIVO);
 		
 		LeiaMe leiaMe = new LeiaMe();
@@ -175,9 +182,14 @@ public class LeiaMeController implements Acao {
 			message = ConstantDataManager.MESSAGE_DADOS_OBRIGATORIOS_NAO_INFORMADO;
 		}
 
+		if(StringUtils.isLong(featureParameter)) {
+			leiaMe.setCodigoFeature(Integer.valueOf(featureParameter));
+		}
+
 		leiaMe.setDescricaoLeiaMe(descricaoParameter);
 		leiaMe.setVersao(versaoParameter);
 		leiaMe.setCodigoModulo(Integer.valueOf(moduloParameter));
+		leiaMe.setSolicitante(solicitanteParameter);
 		
 		LeiaMeServices leiaMeServices = new LeiaMeServicesImpl(connection);
 		try
@@ -218,11 +230,17 @@ public class LeiaMeController implements Acao {
 
 		LeiaMeServices leiaMeServices = new LeiaMeServicesImpl(connection);
 		LeiaMe leiaMe = null;
+		List<Feature> features = null;
 		List<Modulo> modulos = null;
 		try 
 		{
 			leiaMe = leiaMeServices.getLeiaMeById(codigo);
 
+
+			FeatureServices featureServices = new FeatureServicesImpl(connection);
+			features = featureServices.getComboFeatures();
+			request.setAttribute(ConstantDataManager.OBJETO_COMBO_FEATURES, features);
+			
 			ModuloServices moduloServices = new ModuloServicesImpl(connection);
 			modulos = moduloServices.getComboModulos();
 			request.setAttribute(ConstantDataManager.OBJETO_COMBO_MODULOS, modulos);
@@ -282,14 +300,20 @@ public class LeiaMeController implements Acao {
 		final String filtrarParameter = request.getParameter(ConstantDataManager.PARAMETER_FILTRAR);
 		
 		List<Modulo> modulos = null;
+		List<Feature> features = null;
 		Filtro filtro = null;
 		try
 		{
 			LeiaMeServices leiaMeServices = new LeiaMeServicesImpl(connection);
 			filtro = leiaMeServices.getUltimoFiltro();
+
+			FeatureServices featureServices = new FeatureServicesImpl(connection);
+			features = featureServices.getComboFeatures();
+			request.setAttribute(ConstantDataManager.OBJETO_COMBO_FEATURES, features);
 			
 			ModuloServices moduloServices = new ModuloServicesImpl(connection);
 			modulos = moduloServices.getComboModulos();
+			
 			modulos.sort(Comparator.comparing(m -> m.getDescricaoModulo()));
 			request.setAttribute(ConstantDataManager.OBJETO_COMBO_MODULOS, modulos);
 		}

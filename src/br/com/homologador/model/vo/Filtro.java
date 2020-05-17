@@ -10,6 +10,7 @@ public class Filtro {
 	private int codigoModulo;
 	private int codigoFeature;
 	private int codigoTipo;
+	private String solicitante;
 	private String versao;
 	
 	public final int getCodigoModulo() {
@@ -35,5 +36,11 @@ public class Filtro {
 	}
 	public void setVersao(String versao) {
 		this.versao = versao;
+	}
+	public String getSolicitante() {
+		return solicitante;
+	}
+	public void setSolicitante(String solicitante) {
+		this.solicitante = solicitante;
 	}
 }

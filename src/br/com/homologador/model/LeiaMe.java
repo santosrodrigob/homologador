@@ -8,10 +8,11 @@ package br.com.homologador.model;
 import java.util.ArrayList;
 import java.util.List;
 
-public class LeiaMe extends Modulo {
+public class LeiaMe extends Feature {
 	
 	private int codigoLeiaMe;
 	private String descricaoLeiaMe;
+	private String solicitante;
 	private String versao;
 	
 	List<LeiaMe> leiames = new ArrayList<LeiaMe>();
@@ -33,6 +34,12 @@ public class LeiaMe extends Modulo {
 	}
 	public void setVersao(String versao) {
 		this.versao = versao;
+	}	
+	public String getSolicitante() {
+		return solicitante;
+	}
+	public void setSolicitante(String solicitante) {
+		this.solicitante = solicitante;
 	}
 	
 	public void add(LeiaMe leiaMe) {
