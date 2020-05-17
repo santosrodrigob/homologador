@@ -5,9 +5,13 @@
 
 package br.com.homologador.controller;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
@@ -16,6 +20,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import br.com.homologador.action.Acao;
+import br.com.homologador.model.DadosCriacao;
 import br.com.homologador.model.Modulo;
 import br.com.homologador.model.TesteAtributos;
 import br.com.homologador.model.vo.TesteCasoTeste;
@@ -34,11 +39,13 @@ public class TesteAtributosController implements Acao {
 	public String listarAction(HttpServletRequest request, HttpServletResponse response, Connection connection)
 			throws ServletException, IOException {
 
+		final String relatorioParameter = request.getParameter(ConstantDataManager.PARAMETER_RELATORIO);
+		final String codigoTesteParameter = request.getParameter(ConstantDataManager.PARAMETER_CODIGO_TESTE);
+		
 		String message = ConstantDataManager.BLANK;
 		
 		TesteAtributos testesAtributos = new TesteAtributos();
-		
-		String codigoTesteParameter = request.getParameter(ConstantDataManager.PARAMETER_CODIGO_TESTE);
+
 		if(StringUtils.isLong(codigoTesteParameter)) {
 			testesAtributos.setCodigoTeste(Integer.valueOf(codigoTesteParameter));		
 		} else {
@@ -79,9 +86,125 @@ public class TesteAtributosController implements Acao {
 		request.setAttribute(ConstantDataManager.OBJETO_LISTA_REGRA_NEGOCIO, listaRegras);
 		request.setAttribute(ConstantDataManager.OBJETO_LISTA_COMPORTAMENTOS, listaComportamentos);
 		
+		if(StringUtils.isLong(relatorioParameter))
+		{
+			boolean isGenerated = false;
+
+			isGenerated = geraArquivos(listaRegras, listaCasos, listaComportamentos, testesAtributos.getCodigoTeste());
+			if(isGenerated) {
+				message = ConstantDataManager.MESSAGE_PROCESSO_FINALIZADO;
+			} else {
+				message = ConstantDataManager.MESSAGE_PROCESSO_FINALIZADO_ERRO;
+			}
+		}
 		request.setAttribute(ConstantDataManager.MESSAGE, message);
-		
 		return "forward:teste-atributos/lista-testes-gerenciar.jsp";
+	}
+
+	private boolean geraArquivos(List<TesteRegra> listaRegras, List<TesteCasoTeste> listaCasos,
+			List<TesteComportamento> listaComportamentos, int codigoTeste) {
+		
+		boolean isGenerated = false;
+					
+		String modulo = null;
+		List<String> modulos = new ArrayList<String>();
+		
+		for (TesteRegra regras : listaRegras)
+		{
+			modulo = regras.getDescricaoModulo();
+
+			if(!modulos.contains(modulo))
+			{
+				modulos.add(modulo);
+			}
+		}
+
+		for (String model : modulos) 
+		{
+			DadosCriacao dadosCriacao = new DadosCriacao();
+			dadosCriacao.setDataCriacao(LocalDate.now());
+			String cabecalho = String.format("%-15s %1s", dadosCriacao.getDataCriacaoFormatada(), model);
+
+			String titulo1 = "CODIGO";
+			String titulo2 = "DESCRIÇÃO";
+			String titulos = String.format("%-15s %s", titulo1, titulo2);
+			String foot1 = "RESULTADO: ";
+			String footer = String.format("%-10s", foot1);
+			String divisor = "/----------------------------/";
+			String titulo3 = "  ## REGRAS DE NEGÓCIO";
+			String titulo4 = "  ## CASOS DE TESTE";
+			String titulo5 = "  ## COMPORTAMENTOS";
+
+			PrintStream ps = null;
+			try 
+			{
+				ps = new PrintStream("C:\\DTM\\RELATORIOS\\TESTES\\" + codigoTeste + " - " + model + ".txt");
+				ps.println(cabecalho);
+				ps.println();
+				ps.println(divisor);
+				ps.println(titulo4);
+				ps.println(divisor);
+				ps.println(titulos);
+				ps.println();
+				if(listaCasos.size()>0) {
+					for (TesteCasoTeste casos : listaCasos)
+					{
+						if(casos.getDescricaoModulo().equalsIgnoreCase(model))
+						{
+							String valores = String.format("%-1s - %s", casos.getCodigoCasoTeste(),
+									casos.getDescricaoCasoTeste());
+							ps.println(valores);
+							ps.println(footer);
+							ps.println();
+						}
+					}
+				}
+				ps.println(divisor);
+				ps.println(titulo3);
+				ps.println(divisor);
+				ps.println(titulos);
+				ps.println();
+				if(listaRegras.size()>0) {
+					for (TesteRegra regras : listaRegras)
+					{
+						if(regras.getDescricaoModulo().equalsIgnoreCase(model))
+						{
+							String valores = String.format("%-1s - %s", regras.getCodigoRegra(),
+									regras.getDescricaoRegraNegocio());
+							ps.println(valores);
+							ps.println(footer);
+							ps.println();
+						}
+					}					
+				}
+				ps.println(divisor);
+				ps.println(titulo5);
+				ps.println(divisor);
+				ps.println(titulos);
+				ps.println();
+				if(listaComportamentos.size()>0) {
+					for (TesteComportamento comportamento : listaComportamentos)
+					{
+						if(comportamento.getDescricaoModulo().equalsIgnoreCase(model))
+						{
+							String valores = String.format("%-1s - %s", comportamento.getCodigoComportamento(),
+									comportamento.getDescricaoComportamento());
+							ps.println(valores);
+							ps.println(footer);
+							ps.println();
+						}
+					}
+				}
+				ps.close();
+				isGenerated = true;
+			} 
+			catch (FileNotFoundException e) 
+			{
+				e.printStackTrace();
+				isGenerated = false;
+			}
+		}
+		return isGenerated;
 	}
 
 	@Override

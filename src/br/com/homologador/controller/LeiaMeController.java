@@ -112,7 +112,7 @@ public class LeiaMeController implements Acao {
 			}
 		}
 		
-		for (String model : modulos) 
+		for (String model : modulos)
 		{
 			DadosCriacao dadosCriacao = new DadosCriacao();
 			dadosCriacao.setDataCriacao(LocalDate.now());
@@ -126,7 +126,7 @@ public class LeiaMeController implements Acao {
 			PrintStream ps = null;
 			try 
 			{
-				ps = new PrintStream("C:\\DTM\\LEIA-ME\\LEIA-ME - " + model +".txt");
+				ps = new PrintStream("C:\\DTM\\RELATORIOS\\LEIA-ME\\LEIA-ME - " + model +".txt");
 				ps.println(cabecalho);
 				ps.println();
 				ps.println(titulos);

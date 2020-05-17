@@ -6,12 +6,14 @@
 package br.com.homologador.services.impl;
 
 import java.sql.Connection;
+import java.util.List;
 
 import br.com.homologador.dao.BugsDao;
 import br.com.homologador.dao.impl.BugsDaoImpl;
 import br.com.homologador.model.TesteAtributos;
 import br.com.homologador.model.vo.BugCasoTeste;
 import br.com.homologador.model.vo.BugComportamento;
+import br.com.homologador.model.vo.BugItens;
 import br.com.homologador.model.vo.BugRegra;
 import br.com.homologador.services.BugsServices;
 
@@ -74,5 +76,10 @@ public class BugsServicesImpl implements BugsServices {
 	public boolean alteraBugsComportamento(Integer codigoTeste, Integer tipo, Integer codigoComportamento)
 			throws Exception {
 		return this.bugsDao.alteraBugsComportamento(codigoTeste, tipo, codigoComportamento);
+	}
+
+	@Override
+	public List<BugItens> getAll() throws Exception {
+		return this.bugsDao.getAll();
 	}
 }

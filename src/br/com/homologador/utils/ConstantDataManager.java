@@ -77,6 +77,7 @@ public final class ConstantDataManager
 	public static final String OBJETO_LEIA_ME = "leiaMe";
 	public static final String OBJETO_GET_ULTIMO_FILTRO = "filtro";
 
+	public static final String OBJETO_LISTA_BUGS = "bugs";
 	public static final String OBJETO_LISTA_CASOS_TESTE = "listaCasos";
 	public static final String OBJETO_LISTA_REGRA_NEGOCIO = "listaRegras";
 	public static final String OBJETO_LISTA_COMPORTAMENTOS = "listaComportamentos";
@@ -88,6 +89,7 @@ public final class ConstantDataManager
 	
 	//Mensagens 
 	public static final String MESSAGE = "message";
+	public static final String MESSAGE_SESSAO = "messageSession";
 	//Erro
 	public static final String MESSAGE_DADOS_OBRIGATORIOS_NAO_INFORMADO = "Dados obrigatarios nao informado!";
 	public static final String MESSAGE_PROBLEMAS_SALVAR_ALTERAR = "Nu00E3o foi possivel Salvar os Dados!";

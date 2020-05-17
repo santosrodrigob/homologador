@@ -5,17 +5,25 @@
 
 package br.com.homologador.controller;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.sql.Connection;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import br.com.homologador.action.Acao;
+import br.com.homologador.model.DadosCriacao;
 import br.com.homologador.model.TesteAtributos;
 import br.com.homologador.model.vo.BugCasoTeste;
 import br.com.homologador.model.vo.BugComportamento;
+import br.com.homologador.model.vo.BugItens;
 import br.com.homologador.model.vo.BugRegra;
 import br.com.homologador.services.BugsServices;
 import br.com.homologador.services.impl.BugsServicesImpl;
@@ -27,8 +35,117 @@ public class BugsController implements Acao {
 	@Override
 	public String listarAction(HttpServletRequest request, HttpServletResponse response, Connection connection)
 			throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		return null;
+		
+		String messageBug = ConstantDataManager.BLANK;
+		List<BugItens> bugs = null;
+		try 
+		{
+			BugsServices bugsServices = new BugsServicesImpl(connection);
+			bugs = bugsServices.getAll();
+		} 
+		catch (Exception e) 
+		{
+			e.printStackTrace();
+			throw new RuntimeException();
+		}
+		
+		boolean isGenerated = false;
+
+		isGenerated = geraArquivos(bugs);
+		if(isGenerated) {
+			messageBug = ConstantDataManager.MESSAGE_PROCESSO_FINALIZADO;
+		} else {
+			messageBug = ConstantDataManager.MESSAGE_PROCESSO_FINALIZADO_ERRO;
+		}
+		
+		HttpSession sessao = request.getSession();
+		sessao.setAttribute(ConstantDataManager.MESSAGE_SESSAO, messageBug);
+		return "redirect:entrada?controller=Teste&acao=Listar";
+	}
+
+	private boolean geraArquivos(List<BugItens> bugs) {
+		
+		boolean isGenerated = false;
+		
+		Integer modulo = null;
+		List<Integer> modulos = new ArrayList<Integer>();
+		
+		for (BugItens bug : bugs)
+		{
+			modulo = bug.getCodigoTeste();
+
+			if(!modulos.contains(modulo))
+			{
+				modulos.add(modulo);
+			}
+		}
+		
+		for (Integer model : modulos)
+		{
+			DadosCriacao dadosCriacao = new DadosCriacao();
+			dadosCriacao.setDataCriacao(LocalDate.now());
+			String cabecalho = String.format("%-11s %1s", dadosCriacao.getDataCriacaoFormatada(), "PLANO DE TESTE: "+ model);
+
+			String titulo1 = "LISTA DE BUGS: ";
+			String titulo2 = "LISTA DE RELAÇÃO E BUGS: ";
+
+			String linha1 = "## RELAÇÃO: ";
+			String linha2 = "# BUG: ";
+			String linha3 = "# MELHORIA: ";
+
+			String titulos = String.format("%s", titulo1);
+
+			PrintStream ps = null;
+			try 
+			{
+				ps = new PrintStream("C:\\DTM\\RELATORIOS\\BUGS\\TESTE - " + model +".txt");
+				ps.println(cabecalho);
+				ps.println();
+				ps.println(titulos);
+				ps.println();
+				for (BugItens bug : bugs)
+				{
+					if(bug.getCodigoTeste() == model)
+					{
+						String valores = "";
+						if(2 == bug.getTipo()) {
+							valores = String.format("%-1s %s - %s", linha3, bug.getCodigoBug(), bug.getDescricaoBug());
+						} else {
+							valores = String.format("%-1s %s - %s", linha2, bug.getCodigoBug(), bug.getDescricaoBug());
+						}
+						ps.println(valores);
+						ps.println();
+					}
+				}
+				ps.println();
+				ps.println(titulo2);
+				ps.println();
+				for (BugItens bug : bugs)
+				{
+					if(bug.getCodigoTeste() == model)
+					{
+						String valores1 = String.format("%-1s %s", linha1, bug.getDescricao());
+						String valores2 = "";
+						if(2 == bug.getTipo()) {
+							valores2 = String.format("%-1s %s - %s", linha3, bug.getCodigoBug(), bug.getDescricaoBug());							
+						} else {
+							valores2 = String.format("%-1s %s - %s", linha2, bug.getCodigoBug(), bug.getDescricaoBug());
+						}
+						ps.println(valores1);
+						ps.println(valores2);
+						ps.println();
+					}
+				}
+				ps.close();
+				isGenerated = true;
+			} 
+			catch (FileNotFoundException e) 
+			{
+				e.printStackTrace();
+				isGenerated = false;
+			}
+		}
+		return isGenerated;
 	}
 
 	@Override

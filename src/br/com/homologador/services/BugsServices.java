@@ -5,9 +5,12 @@
 
 package br.com.homologador.services;
 
+import java.util.List;
+
 import br.com.homologador.model.TesteAtributos;
 import br.com.homologador.model.vo.BugCasoTeste;
 import br.com.homologador.model.vo.BugComportamento;
+import br.com.homologador.model.vo.BugItens;
 import br.com.homologador.model.vo.BugRegra;
 
 public interface BugsServices {
@@ -22,4 +25,5 @@ public interface BugsServices {
 	boolean alteraBugsCasoTeste(Integer codigoTeste, Integer tipo, Integer codigoCasoTeste) throws Exception;
 	boolean alteraBugsRegra(Integer codigoTeste, Integer tipo, Integer codigoRegra) throws Exception;
 	boolean alteraBugsComportamento(Integer codigoTeste, Integer tipo, Integer codigoComportamento) throws Exception;
+	List<BugItens> getAll() throws Exception;
 }

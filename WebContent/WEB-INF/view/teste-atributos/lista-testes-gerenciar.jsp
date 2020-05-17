@@ -12,19 +12,21 @@
 				<a class="btn-floating btn-large waves-effect waves-light red" href="entrada?controller=Teste&acao=Open">
 					<i class="material-icons">add</i>
 				</a>
+				<a class="btn-floating btn-large waves-effect waves-light blue-grey" id="btn-file" href="entrada?controller=TesteAtributos&acao=Listar&relatorio=1&codigoTeste=${codigoTeste }">
+					<i class="material-icons">insert_drive_file</i>
+				</a>
 			</div>
+			<p id="message">${message }</p>
 			<h4 class="center">Manutenção de Testes</h4>
 		</div>
 
 			<div class="row">
 				<div class="col m4">
-					<h6><strong>Plano de Teste
+					<h6>Plano de Teste</h6>
 					<input class="center" name="casoTeste" id="casoTeste" value="${codigoTeste }" readonly/>
-					</strong></h6>
 				</div>
-				<h6>-</h6>
 				<div class="col m4 right">
-					<input id="pesquisa" name="pesquisa" placeholder="Search"/>
+					<input id="pesquisa" name="pesquisa" placeholder="Pesquisar"  style="padding: 20px;" />
 				</div>
 			</div>
 		

@@ -26,11 +26,12 @@ public class TestesAtributosDaoImpl implements TestesAtributosDao {
 
 	@Override
 	public void getAll(TesteAtributos testeAtributos) throws Exception {
-				
+
 		StringBuilder query = new StringBuilder();
 		
 		query.append("select  ");
 		query.append("	t.codigo_regra, ");
+		query.append("	concat(m.modulo, ' - ', f.feature, ', ', tipo.tipo) as modulo, ");
 		query.append("	r.regra_negocio, ");
 		query.append("	t.observacao, ");
 		query.append("	t.conclusao, ");
@@ -41,6 +42,9 @@ public class TestesAtributosDaoImpl implements TestesAtributosDao {
 		query.append("	tb_teste te ");
 		query.append("	inner join tb_teste_atributo t on t.codigo_teste=te.codigo_teste and t.codigo_modulo=te.codigo_modulo and t.codigo_feature=te.codigo_feature and t.codigo_tipo=te.codigo_tipo ");
 		query.append("	inner join tb_regra_negocio r on t.codigo_modulo=r.codigo_modulo and t.codigo_feature=r.codigo_feature and t.codigo_tipo=r.codigo_tipo and t.codigo_regra=r.codigo_regra ");
+		query.append("	inner join tb_modulo m on t.codigo_modulo=m.codigo_modulo ");
+		query.append("	inner join tb_feature f on t.codigo_modulo=f.codigo_modulo and t.codigo_feature=f.codigo_feature ");
+		query.append("	inner join tb_tipo tipo on t.codigo_modulo=tipo.codigo_modulo and t.codigo_feature=tipo.codigo_feature and t.codigo_tipo=tipo.codigo_tipo ");
 		query.append("where ");
 		query.append("	t.codigo_teste = ? ");
 
@@ -57,6 +61,7 @@ public class TestesAtributosDaoImpl implements TestesAtributosDao {
 				TesteRegra regra = new TesteRegra();
 				
 				regra.setCodigoRegra(rs.getInt("codigo_regra"));
+				regra.setDescricaoModulo(rs.getString("modulo"));
 				regra.setDescricaoRegraNegocio(rs.getString("regra_negocio"));
 				regra.setObservacao(rs.getString("observacao"));
 				regra.setConclusao(rs.getString("conclusao"));
@@ -76,6 +81,7 @@ public class TestesAtributosDaoImpl implements TestesAtributosDao {
 		
 		query.append("select  ");
 		query.append("	t.codigo_caso_teste, ");
+		query.append("	concat(m.modulo, ' - ', f.feature, ', ', tipo.tipo) as modulo, ");
 		query.append("	c.caso_teste, ");
 		query.append("	t.observacao, ");
 		query.append("	t.conclusao, ");
@@ -86,6 +92,9 @@ public class TestesAtributosDaoImpl implements TestesAtributosDao {
 		query.append("	tb_teste te ");
 		query.append("	inner join tb_teste_atributo t on t.codigo_teste=te.codigo_teste and t.codigo_modulo=te.codigo_modulo and t.codigo_feature=te.codigo_feature and t.codigo_tipo=te.codigo_tipo ");
 		query.append("	inner join tb_caso_teste c on t.codigo_modulo=c.codigo_modulo and t.codigo_feature=c.codigo_feature and t.codigo_tipo=c.codigo_tipo and t.codigo_caso_teste=c.codigo_caso_teste ");
+		query.append("	inner join tb_modulo m on t.codigo_modulo=m.codigo_modulo ");
+		query.append("	inner join tb_feature f on t.codigo_modulo=f.codigo_modulo and t.codigo_feature=f.codigo_feature ");
+		query.append("	inner join tb_tipo tipo on t.codigo_modulo=tipo.codigo_modulo and t.codigo_feature=tipo.codigo_feature and t.codigo_tipo=tipo.codigo_tipo ");
 		query.append("where ");
 		query.append("	t.codigo_teste = ? ");
 
@@ -100,6 +109,7 @@ public class TestesAtributosDaoImpl implements TestesAtributosDao {
 				TesteCasoTeste caso = new TesteCasoTeste();
 				
 				caso.setCodigoCasoTeste(rs.getInt("codigo_caso_teste"));
+				caso.setDescricaoModulo(rs.getString("modulo"));
 				caso.setDescricaoCasoTeste(rs.getString("caso_teste"));
 				caso.setObservacao(rs.getString("observacao"));
 				caso.setConclusao(rs.getString("conclusao"));
@@ -119,6 +129,7 @@ public class TestesAtributosDaoImpl implements TestesAtributosDao {
 		
 		query.append("select ");
 		query.append("	t.codigo_comportamento, ");
+		query.append("	concat(m.modulo, ' - ', f.feature, ', ', tipo.tipo) as modulo, ");
 		query.append("	p.comportamento, ");
 		query.append("	t.observacao, ");
 		query.append("	t.conclusao, ");
@@ -129,6 +140,9 @@ public class TestesAtributosDaoImpl implements TestesAtributosDao {
 		query.append("	tb_teste te ");
 		query.append("	inner join tb_teste_atributo t on t.codigo_teste=te.codigo_teste and t.codigo_modulo=te.codigo_modulo and t.codigo_feature=te.codigo_feature and t.codigo_tipo=te.codigo_tipo ");
 		query.append("	inner join tb_comportamento p on t.codigo_modulo=p.codigo_modulo and t.codigo_feature=p.codigo_feature and t.codigo_tipo=p.codigo_tipo and t.codigo_comportamento=p.codigo_comportamento ");
+		query.append("	inner join tb_modulo m on t.codigo_modulo=m.codigo_modulo ");
+		query.append("	inner join tb_feature f on t.codigo_modulo=f.codigo_modulo and t.codigo_feature=f.codigo_feature ");
+		query.append("	inner join tb_tipo tipo on t.codigo_modulo=tipo.codigo_modulo and t.codigo_feature=tipo.codigo_feature and t.codigo_tipo=tipo.codigo_tipo ");
 		query.append("where ");
 		query.append("	t.codigo_teste = ? ");
 
@@ -143,6 +157,7 @@ public class TestesAtributosDaoImpl implements TestesAtributosDao {
 				TesteComportamento comportamento = new TesteComportamento();
 				
 				comportamento.setCodigoComportamento(rs.getInt("codigo_comportamento"));
+				comportamento.setDescricaoModulo(rs.getString("modulo"));
 				comportamento.setDescricaoComportamento(rs.getString("comportamento"));
 				comportamento.setObservacao(rs.getString("observacao"));
 				comportamento.setConclusao(rs.getString("conclusao"));

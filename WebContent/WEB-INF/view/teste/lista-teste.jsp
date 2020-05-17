@@ -8,6 +8,10 @@
 			<a class="btn-floating btn-large waves-effect waves-light red" href="entrada?controller=Teste&acao=Open">
 				<i class="material-icons">add</i>
 			</a>
+			<a class="btn-floating btn-large waves-effect waves-light blue-grey" id="btn-file" href="entrada?controller=Bugs&acao=Listar">
+				<i class="material-icons">insert_drive_file</i>
+			</a>
+			<p id="message">${messageSession }</p>
 			<h4 class="center">Lista de Plano de Testes</h4>
 		</div>
 

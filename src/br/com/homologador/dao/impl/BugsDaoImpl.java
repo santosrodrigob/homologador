@@ -8,11 +8,14 @@ package br.com.homologador.dao.impl;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.List;
 
 import br.com.homologador.dao.BugsDao;
 import br.com.homologador.model.TesteAtributos;
 import br.com.homologador.model.vo.BugCasoTeste;
 import br.com.homologador.model.vo.BugComportamento;
+import br.com.homologador.model.vo.BugItens;
 import br.com.homologador.model.vo.BugRegra;
 
 public class BugsDaoImpl implements BugsDao {
@@ -571,5 +574,69 @@ public class BugsDaoImpl implements BugsDao {
 			}
 		}
 		return isUpdated;
+	}
+
+	@Override
+	public List<BugItens> getAll() throws Exception {
+		
+		List<BugItens> itens = new ArrayList<BugItens>();
+		
+		StringBuilder query = new StringBuilder();
+		query.append("select ");
+		query.append("b.codigo_teste, ");
+		query.append("b.codigo_bug, ");
+		query.append("b.bug, ");
+		query.append("case  ");
+		query.append("when b.codigo_caso_teste is not null then concat('CASO TESTE - ', te.caso_teste) ");
+		query.append("when b.codigo_regra is not null then concat('REGRA NEGOCIO - ', r.regra_negocio) ");
+		query.append("when b.codigo_comportamento is not null then concat('COMPORTAMENTO - ', c.comportamento) ");
+		query.append("else ' - ' ");
+		query.append("end as descricao, ");
+		query.append("b.tipo, ");
+		query.append("b.situacao ");
+		query.append("from  ");
+		query.append("tb_bugs b ");
+		query.append("inner join tb_teste t on b.codigo_teste=t.codigo_teste ");
+		query.append("left join tb_caso_teste te on b.codigo_caso_teste=te.codigo_caso_teste ");
+		query.append("left join tb_regra_negocio r on b.codigo_regra=r.codigo_regra ");
+		query.append("left join tb_comportamento c on b.codigo_comportamento=c.codigo_comportamento ");
+		query.append("where b.tipo in (2, 3) ");
+		
+		PreparedStatement statement = null;
+		
+		try
+		{
+			statement = this.connection.prepareStatement(query.toString());
+			statement.executeQuery();
+			ResultSet rs = statement.getResultSet();
+			
+			while (rs.next()) {
+
+				BugItens bug = new BugItens();
+				
+				bug.setCodigoTeste(rs.getInt("codigo_teste"));
+				bug.setDescricao(rs.getString("descricao"));
+				bug.setCodigoBug(rs.getInt("codigo_bug"));
+				bug.setDescricaoBug(rs.getString("bug"));
+				bug.setSituacao(rs.getInt("situacao"));
+				bug.setTipo(rs.getInt("tipo"));
+				itens.add(bug);
+			}
+		}
+		catch (Exception e) 
+		{
+			e.printStackTrace();
+			throw new RuntimeException();
+		}
+		finally 
+		{
+			if(statement!=null) {
+				statement.close();
+			}
+			if(connection!=null) {
+				connection.close();
+			}
+		}
+		return itens;
 	}	
 }
