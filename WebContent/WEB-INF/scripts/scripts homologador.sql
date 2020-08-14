@@ -35,6 +35,7 @@ create table if not exists `tb_filtro`
 	codigo_modulo_leia_me int NULL,
 	codigo_feature_leia_me int NULL,
     versao_leia_me varchar(15) NULL,
+    data_criacao date NOT NULL,
     data_alteracao date NULL
 ) Engine InnoDB;
 
